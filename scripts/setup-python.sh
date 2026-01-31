@@ -43,17 +43,18 @@ echo ""
 echo -e "${YELLOW}NOTE: Consider using ./quickstart.sh instead for a complete setup.${NC}"
 echo ""
 
-# Available Python interpreter
-for cmd in "${POSSIBLE_PYTHONS[@]}"; do
-    # Check for python interpreter
-    if command -v "$cmd" >/dev/null 2>&1; then
+# Check for Python
+if ! command -v python &> /dev/null && ! command -v python3 &> /dev/null; then
+    echo -e "${RED}Error: Python is not installed.${NC}"
+    echo "Please install Python 3.11+ from https://python.org"
+    exit 1
+fi
 
-        # Specific check for Windows 'py' launcher
-        if [ "$cmd" = "py" ]; then
-            CURRENT_CMD=(py -3)
-        else
-            CURRENT_CMD=("$cmd")
-        fi
+# Use python3 if available, otherwise python
+PYTHON_CMD="python3"
+if ! command -v python3 &> /dev/null; then
+    PYTHON_CMD="python"
+fi
 
         # Check Python version
         if "${CURRENT_CMD[@]}" -c "import sys; sys.exit(0 if sys.version_info >= ($PYTHON_MAJOR_VERSION, $PYTHON_MINOR_VERSION) else 1)" >/dev/null 2>&1; then

@@ -104,6 +104,7 @@ if ! command -v python &> /dev/null && ! command -v python3 &> /dev/null; then
     exit 1
 fi
 
+<<<<<<< HEAD
 # Prefer a Python >= 3.11 if multiple are installed (common on macOS).
 PYTHON_CMD=""
 for CANDIDATE in python3.11 python3.12 python3.13 python3 python; do
@@ -121,6 +122,22 @@ if [ -z "$PYTHON_CMD" ]; then
     # Fall back to python3/python just for a helpful detected version in the error message.
     PYTHON_CMD="python3"
     if ! command -v python3 &> /dev/null; then
+=======
+# Check for specific Python versions first (3.14 down to 3.11)
+PYTHON_CMD=""
+for ver in 3.14 3.13 3.12 3.11; do
+    if command -v python$ver &> /dev/null; then
+        PYTHON_CMD="python$ver"
+        break
+    fi
+done
+
+# Fallback to python3 or python
+if [ -z "$PYTHON_CMD" ]; then
+    if command -v python3 &> /dev/null; then
+        PYTHON_CMD="python3"
+    elif command -v python &> /dev/null; then
+>>>>>>> 8a4c253 (new commit)
         PYTHON_CMD="python"
     fi
 fi
